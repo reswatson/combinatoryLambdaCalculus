@@ -316,7 +316,7 @@ Arity (trm1 · trm2) = pred (Arity trm1)
 Arity' : (trm : Term) → ℤ  -- this goes negative to record over-application
 Arity' Self = + zero
 Arity' (` x) = + zero
-Arity' (Λ n trm) = + zero
+Arity' (Λ n trm) = + (suc n)
 Arity' (trm1 · trm2) = pred' (Arity' trm1)
 
 isLambda? : (trm : Term) → Bool
@@ -615,7 +615,7 @@ SubΛ-base (Λ n (trm1 · trm2) {scoping}) refl = Λ n ((SelfSub (Λ n (trm1 · 
 SubΛ-base (Λ n trm {scoping}) isl = Λ n (SelfSub (Λ n trm {scoping}) trm) {Scopetrm<=n≡true→ {n} {trm} {trm} scoping scoping}
             
 AppFold : {n : ℕ} → (trm : Term) → {arity : Arity' trm ≡ + n} → {isc : isCombinator trm ≡ true} → Term
-AppFold {.zero} (Λ m trm {scoping}) {refl} {refl} = SubΛ-base (Λ m trm {scoping}) refl
+AppFold {.suc n} (Λ m trm {scoping}) {refl} {refl} = SubΛ-base (Λ m trm {scoping}) refl
 AppFold {n} (trm1 · trm2) {arity} {isc} = Substitute n (AppFold {suc n} trm1 {trans (sym suc'Pred'-id) (cong (λ w → suc' w) arity)} {∧-elim-left isc}) trm2   -- Substitute trm2 into  (` n) at top level of Appfolded trm1
 
 -- REDUCTION STEPS --
